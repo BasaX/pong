@@ -133,21 +133,35 @@ function love.update(dt)
         end
     end
 
+    -- player 1
     if love.keyboard.isDown('w') then
-        player1.dy = -PADDLE_SPEED
+      player1.dy = -PADDLE_SPEED
+      player1.isIA = false
     elseif love.keyboard.isDown('s') then
         player1.dy = PADDLE_SPEED
+        player1.isIA = false
     else
         player1.dy = 0
     end
 
-    if love.keyboard.isDown('up') then
-        player2.dy = -PADDLE_SPEED
-    elseif love.keyboard.isDown('down') then
-        player2.dy = PADDLE_SPEED
-    else
-        player2.dy = 0
+    if player1.isIA then
+      player1.y = ball.y
     end
+
+    -- player 2
+    if love.keyboard.isDown('up') then
+          player2.dy = -PADDLE_SPEED
+          player2.isIA = false
+      elseif love.keyboard.isDown('down') then
+          player2.dy = PADDLE_SPEED
+          player2.isIA = false
+      else
+          player2.dy = 0
+    end
+
+  if player2.isIA then
+    player2.y = ball.y
+  end
 
     if gameState == 'play' then
         ball:update(dt)
@@ -161,6 +175,8 @@ function love.keypressed(key)
     if key == 'escape' then
         love.event.quit()
     elseif key == 'enter' or key == 'return' then
+        player1.isIA = true
+        player2.isIA = true
         if gameState == 'start' then
             gameState = 'serve'
         elseif gameState == 'serve' then
